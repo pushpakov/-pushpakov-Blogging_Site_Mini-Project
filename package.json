@@ -1,0 +1,31 @@
+{
+  "name": "project_1_radon",
+  "version": "1.0.0",
+  "description": "A mini blog project on JavaScript and Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pushpakov/Project_1_Radon.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pushpakov/Project_1_Radon/issues"
+  },
+  "homepage": "https://github.com/pushpakov/Project_1_Radon#readme",
+  "dependencies": {
+    "email-validator": "^2.0.4",
+    "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
+    "module": "^1.0.0",
+    "mongoose": "^6.4.0",
+    "nodemon": "^2.0.18",
+    "password-validator": "^5.2.1",
+    "router": "^1.3.7",
+    "validators": "^0.3.1"
+  }
+}
