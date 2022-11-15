@@ -58,20 +58,23 @@ const createBlog = async function (req, res) {
 const getBlogs = async (req, res) => {
   try {
     let data = req.query
-
-    if(Object.keys(data).length===0){
-      return res.status(400).send({ status: false, msg: "Query parameter is empty / -invalid" })
+    
+    if(Object.keys(data).length!==0){
+      let blog = await blogModel.find({ $and: [{ isPublished: true }, { isDeleted: false }, data] })
+      if (blog.length < 1) {
+        return res.status(404).send({ status: false, msg: 'Blog not found' })
+      }
+      return res.status(200).send({ status: true, data: blog })
+    }else{
+      let blog = await blogModel.find({ isPublished: true , isDeleted: false })
+        if (blog.length < 1) {
+          return res.status(404).send({ status: false, msg: 'Blog not found' })
+        }
+        return res.status(200).send({ status: true, data: blog })
     }
-
-    let blog = await blogModel.find({ $and: [{ isPublished: true }, { isDeleted: false }, data] })
-
-    if (blog.length < 1) {
-      return res.status(404).send({ status: false, msg: 'blog is being deleted or yet not published' })
-    }
-    return res.status(200).send({ status: true, data: blog })
   } catch (err) {
 
-    return res.status(500).send({ status: false, msg: 'server not found' })
+    return res.status(500).send({ status: false, msg: err })
   }
 }
 
@@ -159,9 +162,9 @@ const deleteBlog = async function (req, res) {
       { returnDocument: 'after' },
     )
     if (deletedDoc.modifiedCount == 0) {
-      return res.status(400).send({ status: false, msg: "No Document Found " })
+      return res.status(404).send({ status: false, msg: "No Document Found " })
     }
-    return res.status(200).send({ status: true, data: deletedDoc })
+    return res.status(200).send({ status: true,message:"Blog is Successfully Deleted" })
 
   } catch (err) {
     return res.status(500).send({ status: false, msg: err.message })
@@ -177,10 +180,16 @@ const deleteByQuery = async (req, res) => {
     if(Object.keys(data).length===0){
       return res.status(400).send({ status: false, msg: "Query parameter is empty / -invalid" })
     }
-    let token = req.headers["x-api-key" || "X-Api-Key"]
-    let decodedToken = jwt.verify(token, "functionup-project-1")
+    let token = req.header("Authorization")
+    token = token.split(" ")
+    let decodedToken = jwt.verify(token[1], "functionup-project-1")
     
-    let uesrmodified = decodedToken.userId
+    let uesrmodified = decodedToken.userId.toString()
+    if(req.query.authorId){
+      if(req.query.authorId!==uesrmodified){
+        return res.status(403).send({ status: false, msg: "Unauthorised" })
+      }
+    }
 
     let allblog = await blogModel.updateMany(
       {

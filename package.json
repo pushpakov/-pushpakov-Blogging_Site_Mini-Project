@@ -4,6 +4,7 @@
   "description": "A mini blog project on JavaScript and Node.js",
   "main": "index.js",
   "scripts": {
+    "start": "npx nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,6 +19,7 @@
   },
   "homepage": "https://github.com/pushpakov/Project_1_Radon#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "email-validator": "^2.0.4",
     "express": "^4.18.1",
     "jsonwebtoken": "^8.5.1",
